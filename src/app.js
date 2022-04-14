@@ -1,6 +1,7 @@
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
+  ipcMain
 } = require('electron')
 const url = require("url");
 const path = require("path");
@@ -9,8 +10,8 @@ let mainWindow
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    fullscreen: true,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true
     }
@@ -18,18 +19,21 @@ function createWindow() {
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, `/dist/unochat/index.html`),
+      pathname: path.join(__dirname, `../dist/unochat/index.html`),
       protocol: "file:",
       slashes: true
     })
   );
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
   })
 }
+
+ipcMain.on('sair', (event) => {
+  console.log('Fechando aplicação');
+  app.quit()
+})
 
 app.on('ready', createWindow)
 
