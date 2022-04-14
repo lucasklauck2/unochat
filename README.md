@@ -16,7 +16,7 @@ Backend: NodeJS
 
 ❯ npm install
 
-> npm start // npx electron-forge package
+> npm start ou npx electron-forge package
 
 
 ## Devs
