@@ -11,7 +11,7 @@ let mainWindow
 function createWindow() {
   mainWindow = new BrowserWindow({
     fullscreen: true,
-    autoHideMenuBar: true,
+    frame: true,
     webPreferences: {
       nodeIntegration: true
     }
@@ -19,7 +19,7 @@ function createWindow() {
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, `../dist/unochat/index.html`),
+      pathname: path.join(__dirname, `../dist/index.html`),
       protocol: "file:",
       slashes: true
     })
