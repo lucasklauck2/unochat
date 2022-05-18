@@ -37,7 +37,7 @@
       "target": "portable"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "deb"
     }
   },
   "postinstall": "electron-builder install-app-deps",
