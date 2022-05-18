@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "pack": "electron-builder --dir",
-    "dist": "ng build --base-href ./ && electron-builder",
+    "dist": "ng build --base-href ./ && electron-builder -- -mac",
     "electron-build": "ng build --prod && electron .",
     "electron-package": "electron-packager . FarmhubCompanyDashboard --platform=win32 --arch=x64",
     "publish": "npm run dist -- -p always"
@@ -94,6 +94,7 @@
     "@angular/compiler-cli": "~13.2.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
+    "cli-truncate": "^3.1.0",
     "electron": "^18.0.3",
     "electron-builder": "^23.0.3",
     "electron-prebuilt-compile": "8.2.0",
