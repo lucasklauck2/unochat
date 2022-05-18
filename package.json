@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "pack": "electron-builder --dir",
-    "dist": "ng build --base-href ./ && electron-builder -- -mac",
+    "dist": "ng build --base-href ./ && electron-builder",
     "electron-build": "ng build --prod && electron .",
     "electron-package": "electron-packager . FarmhubCompanyDashboard --platform=win32 --arch=x64",
     "publish": "npm run dist -- -p always"
