@@ -1,7 +1,9 @@
 {
   "name": "unochat",
-  "author": "Lucas Eduardo Klauck",
-  "email": "lucasklauck2@gmail.com",
+  "author": {
+    "name": "Lucas Klauck",
+    "email": "lucasklauck2@gmail.com"
+  },
   "version": "0.0.2",
   "main": "src/app.js",
   "scripts": {
