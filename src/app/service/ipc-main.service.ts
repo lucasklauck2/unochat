@@ -6,15 +6,7 @@ export class IpcMainService {
   private _ipc: IpcRenderer | undefined = void 0;
 
   constructor() {
-    if (window.require) {
-      try {
-        this._ipc = window.require('electron').ipcRenderer;
-      } catch (e) {
-        throw e;
-      }
-    } else {
-      console.warn("Electron's IPC was not loaded");
-    }
+    this._ipc = window.require('electron').ipcRenderer;
   }
 
   public on(channel: string, listener: any): void {
