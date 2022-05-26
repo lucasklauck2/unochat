@@ -31,7 +31,7 @@
     },
     "asar": true,
     "mac": {
-      "category": "your.app.category.type",
+      "category": "br.com.lucasklauck.chat",
       "target": [
         "dmg",
         "zip"
@@ -100,6 +100,7 @@
     "@angular-devkit/build-angular": "~13.2.2",
     "@angular/cli": "~13.2.2",
     "@angular/compiler-cli": "~13.2.0",
+    "@apizee/apirtc": "^4.6.5",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "cli-truncate": "^3.1.0",

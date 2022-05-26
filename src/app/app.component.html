@@ -1,1 +1,17 @@
-<router-outlet></router-outlet>
+<div class="container-fluid">
+  <form [formGroup]="conversationFormGroup" (ngSubmit)="getOrcreateConversation()">
+
+    <label>Conversation</label>
+    <input type="text" placeholder="abcd" formControlName="name">
+
+    <button color="primary" type="submit" [disabled]="!conversationFormGroup.valid"
+      title="Get Or Create Conversation">GetOrCreateConversation</button>
+  </form>
+
+  <div>
+    <div id="remote-container">
+    </div>
+    <div id="local-container">
+    </div>
+  </div>
+</div>
