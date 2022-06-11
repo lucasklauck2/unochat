@@ -68,7 +68,7 @@ export class AppComponent {
           stream.addInDiv(
             'remote-container',
             'remote-media-' + stream.streamId,
-            {},
+            {width: '400px'} ,
             false
           );
         })
@@ -94,7 +94,7 @@ export class AppComponent {
           // Save local stream
           localStream = stream;
           stream.removeFromDiv('local-container', 'local-media');
-          stream.addInDiv('local-container', 'local-media', {}, true);
+          stream.addInDiv('local-container', 'local-media',   {width: '300px'} , true);
 
           //==============================
           // 6/ JOIN CONVERSATION

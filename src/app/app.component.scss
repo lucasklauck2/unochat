@@ -1,0 +1,31 @@
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+.toolbar {
+    height:100px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: #09a6a3
+}
+
+.container-videos{
+    height: 100%;
+    width: 100%;
+    background-color: #edebc9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+::ng-deep #local-media{
+    margin: 5px;
+}

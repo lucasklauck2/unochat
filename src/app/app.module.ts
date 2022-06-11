@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PaginaInicialModule } from './components/pagina-inicial/pagina-inicial.module';
 import { IpcMainService } from './service/ipc-main.service';
+import {InputTextModule} from 'primeng/inputtext';
+import {ButtonModule} from 'primeng/button';
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,7 +15,7 @@ import { IpcMainService } from './service/ipc-main.service';
     AppRoutingModule,
     PaginaInicialModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule,InputTextModule,ButtonModule
   ],
   providers: [IpcMainService],
   bootstrap: [AppComponent],

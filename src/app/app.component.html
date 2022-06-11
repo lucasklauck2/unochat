@@ -1,17 +1,21 @@
-<div class="container-fluid">
-  <form [formGroup]="conversationFormGroup" (ngSubmit)="getOrcreateConversation()">
+<div class="container">
 
-    <label>Conversation</label>
-    <input type="text" placeholder="abcd" formControlName="name">
-
-    <button color="primary" type="submit" [disabled]="!conversationFormGroup.valid"
-      title="Get Or Create Conversation">GetOrCreateConversation</button>
-  </form>
-
-  <div>
-    <div id="remote-container">
+  <div class="container-videos">
+    <div id="remote-container" style="margin-bottom: 20px;" class="grid">
     </div>
     <div id="local-container">
     </div>
+  </div>
+
+  <div class="toolbar" [formGroup]="conversationFormGroup">
+
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input type="text" pInputText placeholder="Código da sala" formControlName="name" />
+    </span>
+
+    <button pButton (click)="getOrcreateConversation()" [disabled]="!conversationFormGroup.valid"
+      style="margin-left: 20px;" title="wdwdwdd">Entrar no grupo</button>
+
   </div>
 </div>
