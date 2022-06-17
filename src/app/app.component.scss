@@ -26,6 +26,14 @@
     flex-direction: column;
 }
 
-::ng-deep #local-media{
+::ng-deep video{
     margin: 5px;
+}
+
+::ng-deep .p-button-loading-icon{
+    margin-left: 5px;
+}
+
+.titulo {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }

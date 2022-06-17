@@ -1,6 +1,8 @@
 <div class="container">
 
   <div class="container-videos">
+    <h1 *ngIf="!conectado" class="titulo">Seja bem-vindo! Crie ou entre em alguma sala ;D</h1>
+    <h1 *ngIf="conectado" class="titulo">Você está na sala {{canalConectado}}</h1>
     <div id="remote-container" style="margin-bottom: 20px;" class="grid">
     </div>
     <div id="local-container">
@@ -14,8 +16,11 @@
       <input type="text" pInputText placeholder="Código da sala" formControlName="name" />
     </span>
 
-    <button pButton (click)="getOrcreateConversation()" [disabled]="!conversationFormGroup.valid"
-      style="margin-left: 20px;" title="wdwdwdd">Entrar no grupo</button>
+    <button pButton (click)="getOrcreateConversation()" [disabled]="!conversationFormGroup.valid || entrando || conectado"
+      style="margin-left: 20px;" [loading]="entrando">Entrar</button>
+
+      <button *ngIf="conectado" id="botao-sair" pButton
+      style="margin-left: 20px;" class="p-button-danger">Sair</button>
 
   </div>
 </div>
