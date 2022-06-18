@@ -11,7 +11,7 @@ let mainWindow
 function createWindow() {
   mainWindow = new BrowserWindow({
     fullscreen: true,
-    frame: true,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,

@@ -20,7 +20,10 @@
       style="margin-left: 20px;" [loading]="entrando">Entrar</button>
 
       <button *ngIf="conectado" id="botao-sair" pButton
-      style="margin-left: 20px;" class="p-button-danger">Sair</button>
+      style="margin-left: 20px;" class="p-button-danger">Sair da sala</button>
+
+      <button *ngIf="conectado" id="botao-audio" pButton (click)="alterarEstadoAudio()"
+      style="margin-left: 20px;" class="p-button-info"><img *ngIf="!mutado" height="20" src="../assets/micon.png"><img *ngIf="mutado" height="20" src="../assets/micoff.png"></button>
 
   </div>
 </div>

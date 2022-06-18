@@ -13,10 +13,12 @@ export class AppComponent {
 
   conectado: boolean = false;
   entrando: boolean = false;
+  mutado: boolean = false;
 
   nomeSala: string = '';
   canalConectado: string = '';
-  
+
+  localStream: any = null;
 
   conversationFormGroup = this.fb.group({
     name: this.fb.control('', [Validators.required]),
@@ -28,14 +30,18 @@ export class AppComponent {
     return this.conversationFormGroup.get('name') as FormControl;
   }
 
-  getOrcreateConversation() {
+  alterarEstadoAudio(){
+    this.mutado = !this.mutado;
 
+    this.mutado ? this.localStream.muteAudio() : this.localStream.unmuteAudio();
+  }
+
+  getOrcreateConversation() {
     this.entrando = true;
 
     this.canalConectado = this.conversationFormGroup.get('name')?.value;
 
     console.log(`CONECTRNADO`)
-    var localStream: any = null;
 
     //==============================
     // 1/ CREATE USER AGENT
@@ -108,7 +114,7 @@ export class AppComponent {
           console.log('createStream :', stream);
 
           // Save local stream
-          localStream = stream;
+          this.localStream = stream;
           stream.removeFromDiv('local-container', 'local-media');
           stream.addInDiv('local-container', 'local-media',   {width: '300px'} , true);
 
@@ -123,7 +129,7 @@ export class AppComponent {
               //==============================
               this.entrando = false;
 
-              novaConversa.publish(localStream);
+              novaConversa.publish(this.localStream);
 
               console.log('Entrou na conversa: ', response)
 
@@ -134,7 +140,7 @@ export class AppComponent {
                       console.debug('Sucesso ao sair da conversa');
                       this.conectado = false;
                       this.resetarContainers();
-                      localStream.release();
+                      this.localStream.release();
                       novaConversa.destroy();
                       ua.unregister();
                       novaConversa = null;
