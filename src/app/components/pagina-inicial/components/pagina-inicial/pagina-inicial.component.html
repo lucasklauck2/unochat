@@ -1,15 +1,77 @@
 <div class="container">
+  <div class="corpo">
+    <div class="container-videos">
+      <h1 *ngIf="!conectado" class="titulo">
+        Seja bem-vindo! Crie ou entre em alguma sala ;D
+      </h1>
+      <h1 *ngIf="conectado" class="titulo">
+        Você está na sala {{ canalConectado }}
+      </h1>
+      <div id="remote-container" style="margin-bottom: 20px" class="grid"></div>
+      <div id="local-container"></div>
+    </div>
 
-  <header class="header flex justify-content-center align-items-center text-5xl col">
-    <span>UnoCHAT</span>
-  </header>
+    <div class="container-chat" *ngIf="conectado">
+      <app-chat-texto #chatTexto (onMensagem)="enviarMensagem($event)"></app-chat-texto>
+    </div>
+  </div>
 
-  <main class="main flex justify-content-center align-items-center">
-    <button pButton type="button" label="ENTRAR" class="p-button-success"></button>
-  </main>
+  <div class="toolbar" [formGroup]="form">
 
-  <footer class="footer flex justify-content-center align-items-center col">
-    <button pButton type="button" label="SAIR" class="p-button-danger" (click)="sair()"></button>
-  </footer>
+    <span class="p-input-icon-left" *ngIf="!conectado">
+      <i class="pi pi-user"></i>
+      <input
+        type="text"
+        pInputText
+        placeholder="Nome de usuário"
+        formControlName="usuario"
+      />
+    </span>
 
+    <span class="p-input-icon-left" style="margin-left: 20px" *ngIf="!conectado">
+      <i class="pi pi-search"></i>
+      <input
+        type="text"
+        pInputText
+        placeholder="Código da sala"
+        formControlName="codigoSala"
+      />
+    </span>
+
+    <button
+      pButton
+      (click)="entrarSala()"
+      [disabled]="!form.valid || entrando || conectado" *ngIf="!conectado"
+      style="margin-left: 20px"
+      [loading]="entrando"
+    >
+      Entrar
+    </button>
+
+    <button
+      *ngIf="conectado"
+      id="botao-sair"
+      pButton
+      style="margin-left: 20px"
+      class="p-button-danger"
+      (click)="sairSala()"
+    >
+      Sair da sala
+    </button>
+
+    <button
+      *ngIf="conectado"
+      id="botao-audio"
+      pButton
+      (click)="alterarEstadoAudio()"
+      style="margin-left: 20px"
+      class="p-button-info"
+    >
+      <img *ngIf="!mutado" height="20" src="../assets/micon.png" /><img
+        *ngIf="mutado"
+        height="20"
+        src="../assets/micoff.png"
+      />
+    </button>
+  </div>
 </div>

@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="area-mensagens" id="area-mensagens"></div>
+
+  <div class="area-digitacao">
+
+    <input type="text" pInputText [(ngModel)]="mensagemDigitada" style="width: 100%;" (keypress)="teclaPressionada($event)">
+
+    <button
+      (click)="enviarMensagem()"
+      class="p-button-success"
+      pButton
+      style="margin-left: 5px;"
+    >
+      Enviar
+    </button>
+
+  </div>
+</div>
