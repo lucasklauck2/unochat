@@ -1,6 +1,7 @@
 <div class="container">
   <div class="corpo">
     <div class="container-videos">
+      <img *ngIf="!conectado" src="assets/logo.png" width="400"/>
       <h1 *ngIf="!conectado" class="titulo">
         Seja bem-vindo! Crie ou entre em alguma sala ;D
       </h1>
@@ -67,11 +68,20 @@
       style="margin-left: 20px"
       class="p-button-info"
     >
-      <img *ngIf="!mutado" height="20" src="../assets/micon.png" /><img
+      <img *ngIf="!mutado" height="20" src="assets/micon.png" /><img
         *ngIf="mutado"
         height="20"
-        src="../assets/micoff.png"
+        src="assets/micoff.png"
       />
     </button>
+
+    <button
+    pButton
+    style="position: absolute;top: 10px;right: 10px;"
+    class="p-button-danger"
+    (click)="fecharAplicacao()"
+  >
+    <img height="20" src="assets/desligar.png" />
+  </button>
   </div>
 </div>
