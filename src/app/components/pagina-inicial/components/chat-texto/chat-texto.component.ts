@@ -1,76 +1,64 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Mensagem } from 'src/app/model/mensagem.dto';
 
 @Component({
   selector: 'app-chat-texto',
   templateUrl: './chat-texto.component.html',
-  styleUrls: ['./chat-texto.component.scss']
+  styleUrls: ['./chat-texto.component.scss'],
 })
 export class ChatTextoComponent implements OnInit {
-
   @Output() onMensagem = new EventEmitter<string>();
 
   mensagemDigitada: string = '';
 
-  constructor() { }
+  mensagens: Array<Mensagem> = [];
 
-  ngOnInit(): void {
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  adicionarMensagemPropria(mensagem: string){
+    this.mensagens.push(new Mensagem('', 0, mensagem, new Date(), 1));
   }
 
-  enviarMensagem(){
+  adicionarMensagemExterna(usuario: string, usuarioId: number,mensagem: string){
+    this.mensagens.push(new Mensagem(usuario, usuarioId, mensagem, new Date(), 2));
+  }
 
-    if(this.mensagemDigitada === ''){
+  adicionarMensagemEntrouSaiu(usuario: string,mensagem: string){
+    this.mensagens.push(new Mensagem(usuario, 0, mensagem,new Date(), 3));
+  }
+
+  enviarMensagem() {
+    if (this.mensagemDigitada === '') {
       return;
     }
 
-    const elementoMensagem = document.createElement('div');
-    elementoMensagem.classList.add('mensagem');
-    const spanMensagem = document.createElement('span');
-    spanMensagem.innerHTML = `<b>Eu:</b> ${this.mensagemDigitada}`;
-    elementoMensagem.appendChild(spanMensagem);
-
-    document.getElementById('area-mensagens')?.appendChild(elementoMensagem);
+    this.adicionarMensagemPropria(this.mensagemDigitada);
 
     this.onMensagem.emit(this.mensagemDigitada);
     this.mensagemDigitada = '';
   }
 
-  adicionarMensagem(usuario: string, mensagem: string){
-    if(mensagem === ''){
+  adicionarMensagem(usuario: string, usuarioId: number, mensagem: string) {
+    if (mensagem === '') {
       return;
     }
 
-    const elementoMensagem = document.createElement('div');
-    elementoMensagem.classList.add('mensagem');
-    elementoMensagem.innerHTML = `<b>${usuario} : </b>${mensagem}`;
-
-    document.getElementById('area-mensagens')?.appendChild(elementoMensagem);
-
+    this.adicionarMensagemExterna(usuario, usuarioId, mensagem);
   }
 
-  usuarioEntrou(usuario: string){
-    const divMensagem = document.createElement('div');
-    divMensagem.classList.add('entrou-saiu');
-    const spanMensagem = document.createElement('span');
-    spanMensagem.innerHTML = `<b>${usuario}</b> entrou`;
-    divMensagem.appendChild(spanMensagem);
-
-    document.getElementById('area-mensagens')?.appendChild(divMensagem);
+  usuarioEntrou(usuario: string) {
+    this.adicionarMensagemEntrouSaiu(usuario, 'entrou')
   }
 
-  usuarioSaiu(usuario: string){
-    const divMensagem = document.createElement('div');
-    divMensagem.classList.add('entrou-saiu');
-    const spanMensagem = document.createElement('span');
-    spanMensagem.innerHTML = `<b>${usuario}</b> saiu`;
-    divMensagem.appendChild(spanMensagem);
-
-    document.getElementById('area-mensagens')?.appendChild(divMensagem);
+  usuarioSaiu(usuario: string) {
+    this.adicionarMensagemEntrouSaiu(usuario, 'saiu')
   }
 
-  teclaPressionada(tecla: any){
-    if(tecla.charCode === 13){
+  teclaPressionada(tecla: any) {
+    if (tecla.charCode === 13) {
       this.enviarMensagem();
     }
   }
-
 }

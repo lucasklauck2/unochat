@@ -1,24 +1,36 @@
 <div class="container">
   <div class="corpo">
     <div class="container-videos">
-      <img *ngIf="!conectado" src="assets/logo.png" width="400"/>
-      <h1 *ngIf="!conectado" class="titulo">
+      <img *ngIf="!conectado" src="assets/logo.png" width="400" />
+      <h1 *ngIf="!conectado && !entrando" class="titulo">
         Seja bem-vindo! Crie ou entre em alguma sala ;D
       </h1>
       <h1 *ngIf="conectado" class="titulo">
         Você está na sala {{ canalConectado }}
       </h1>
-      <div id="remote-container" style="margin-bottom: 20px" class="grid"></div>
-      <div id="local-container"></div>
+      <h1 *ngIf="entrando && !conectado" class="titulo">
+        Entrando na sala {{ canalConectado }}...
+      </h1>
+      <div style="margin-bottom: 20px" class="grid">
+        <template #videosRemotos></template>
+      </div>
+      <div
+        [style.display]="!conectado ? 'none' : 'block'"
+        class="grid"
+      >
+        <template #videosLocais></template>
+      </div>
     </div>
 
     <div class="container-chat" *ngIf="conectado">
-      <app-chat-texto #chatTexto (onMensagem)="enviarMensagem($event)"></app-chat-texto>
+      <app-chat-texto
+        #chatTexto
+        (onMensagem)="enviarMensagem($event)"
+      ></app-chat-texto>
     </div>
   </div>
 
   <div class="toolbar" [formGroup]="form">
-
     <span class="p-input-icon-left" *ngIf="!conectado">
       <i class="pi pi-user"></i>
       <input
@@ -29,7 +41,11 @@
       />
     </span>
 
-    <span class="p-input-icon-left" style="margin-left: 20px" *ngIf="!conectado">
+    <span
+      class="p-input-icon-left"
+      style="margin-left: 20px"
+      *ngIf="!conectado"
+    >
       <i class="pi pi-search"></i>
       <input
         type="text"
@@ -42,7 +58,8 @@
     <button
       pButton
       (click)="entrarSala()"
-      [disabled]="!form.valid || entrando || conectado" *ngIf="!conectado"
+      [disabled]="!form.valid || entrando || conectado"
+      *ngIf="!conectado"
       style="margin-left: 20px"
       [loading]="entrando"
     >
@@ -65,7 +82,7 @@
       id="botao-audio"
       pButton
       (click)="alterarEstadoAudio()"
-      style="margin-left: 20px"
+      style="margin-left: 20px; z-index: 1101"
       class="p-button-info"
     >
       <img *ngIf="!mutado" height="20" src="assets/micon.png" /><img
@@ -76,12 +93,12 @@
     </button>
 
     <button
-    pButton
-    style="position: absolute;top: 10px;right: 10px;"
-    class="p-button-danger"
-    (click)="fecharAplicacao()"
-  >
-    <img height="20" src="assets/desligar.png" />
-  </button>
+      pButton
+      style="position: absolute; top: 10px; left: 10px; z-index: 1101"
+      class="p-button-danger"
+      (click)="fecharAplicacao()"
+    >
+      <img height="20" src="assets/desligar.png" />
+    </button>
   </div>
 </div>

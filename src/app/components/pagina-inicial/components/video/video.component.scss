@@ -1,0 +1,41 @@
+.container:hover .identificacao-usuario,
+.container:hover .maximizar {
+  visibility: visible;
+}
+
+.container .identificacao-usuario {
+  visibility: hidden;
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 5px;
+    span {
+      opacity: 100% !important;
+      color: white;
+    }
+  }
+}
+
+.container .maximizar {
+  visibility: hidden;
+  position: absolute;
+  top: 9px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
+  img {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    opacity: 100%;
+    padding: 5px;
+    margin-right: 9px;
+    cursor: pointer;
+  }
+}

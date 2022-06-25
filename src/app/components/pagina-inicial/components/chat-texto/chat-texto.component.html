@@ -1,18 +1,36 @@
 <div class="container">
-  <div class="area-mensagens" id="area-mensagens"></div>
+  <div class="area-mensagens" id="area-mensagens" style="z-index: 1101;">
+
+    <app-mensagem
+      *ngFor="let item of mensagens; let i = index"
+      style="margin-bottom: 10px"
+      [jaIdentificado]="
+        i !== 0 && mensagens[i - 1].usuarioId === item.usuarioId
+      "
+      [tipoMensagem]="item.tipo"
+      [mensagem]="item.mensagem"
+      [horario]="item.horario"
+      [usuario]="item.usuario"
+    ></app-mensagem>
+
+  </div>
 
   <div class="area-digitacao">
-
-    <input type="text" pInputText [(ngModel)]="mensagemDigitada" style="width: 100%;" (keypress)="teclaPressionada($event)">
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="mensagemDigitada"
+      style="width: 100%;z-index: 1101;"
+      (keypress)="teclaPressionada($event)"
+    />
 
     <button
       (click)="enviarMensagem()"
       class="p-button-success"
       pButton
-      style="margin-left: 5px;"
+      style="margin-left: 5px;z-index: 1101;"
     >
       Enviar
     </button>
-
   </div>
 </div>

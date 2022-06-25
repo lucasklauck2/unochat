@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ChatTextoComponent } from '../chat-texto/chat-texto.component';
+import { VideoComponent } from '../video/video.component';
 import { IpcMainService } from './../../../../service/ipc-main.service';
 
 @Component({
@@ -8,12 +9,15 @@ import { IpcMainService } from './../../../../service/ipc-main.service';
   templateUrl: './pagina-inicial.component.html',
   styleUrls: ['./pagina-inicial.component.scss'],
 })
-export class PaginaInicialComponent {
+export class PaginaInicialComponent implements OnDestroy{
   @ViewChild('chatTexto') chatTexto: ChatTextoComponent;
-
-  title = 'ApiRTC-angular';
+  @ViewChild('videosLocais', { read: ViewContainerRef , static: true}) videosLocais: any;
+  @ViewChild('videosRemotos', { read: ViewContainerRef , static: true}) videosRemotos: any;
 
   apiRTC = require('@apizee/apirtc');
+
+  mapaComponenteVideoRemoto = new Map<string, ComponentRef<VideoComponent>>();
+  listaVideosLocais: Array<ComponentRef<VideoComponent>> = [];
 
   conectado: boolean = false;
   entrando: boolean = false;
@@ -38,6 +42,10 @@ export class PaginaInicialComponent {
 
   get codigoSala(): FormControl {
     return this.form.get('codigoSala') as FormControl;
+  }
+
+  ngOnDestroy(): void {
+    this.mapaComponenteVideoRemoto.forEach((valor, chave) => valor.destroy());
   }
 
   // Muta ou desmuta o áudio
@@ -70,6 +78,8 @@ export class PaginaInicialComponent {
 
         this.salaAtiva = novaSala;
 
+        console.log('nova sala: ',novaSala)
+
         // Quando um novo streaming de dados estiver disponível na conversa
         novaSala.on('streamListChanged', (streamInfo: any) => {
 
@@ -95,19 +105,17 @@ export class PaginaInicialComponent {
           .on('streamAdded', (stream: any) => {
 
             // Adiciona a tag <video> com o streaming externo no container
-            stream.addInDiv(
-              'remote-container',
-              'remote-media-' + stream.streamId,
-              { width: '400px' },
-              false
-            );
+            const componentRef = this.videosRemotos.createComponent(VideoComponent);
+            componentRef.instance.width = 400;
+            componentRef.instance.mediaStream = stream.data;
+            componentRef.instance.usuario = stream.contact.userData.username;
+
+            this.mapaComponenteVideoRemoto.set(stream.streamId.toString(), componentRef);
           })
           .on('streamRemoved', (stream: any) => {
             //Remove a tag <video> com streaming externo do container
-            stream.removeFromDiv(
-              'remote-container',
-              'remote-media-' + stream.streamId
-            );
+            this.mapaComponenteVideoRemoto.get(stream.streamId.toString())?.destroy();
+            this.mapaComponenteVideoRemoto.delete(stream.streamId.toString());
           });
 
         // Cria um streaming de dados local
@@ -121,14 +129,14 @@ export class PaginaInicialComponent {
             // Salva o streaming de dados local
             this.localStream = stream;
 
-            stream.removeFromDiv('local-container', 'local-media');
+            console.log('STREAM: ', stream);
 
-            stream.addInDiv(
-              'local-container',
-              'local-media',
-              { width: '300px' },
-              true
-            );
+            const componentRef = this.videosLocais.createComponent(VideoComponent);
+            componentRef.instance.width = 300;
+            componentRef.instance.mediaStream = stream.data;
+            componentRef.instance.usuario = 'Você'
+
+            this.listaVideosLocais.push(componentRef);
 
             // Entra na sala
             novaSala
@@ -157,16 +165,9 @@ export class PaginaInicialComponent {
   }
 
   resetarContainers() {
-    let remoteContainer = document.getElementById('remote-container');
-    let localContainer = document.getElementById('local-container');
+    this.mapaComponenteVideoRemoto.forEach((valor, chave) => valor.destroy());
 
-    if (remoteContainer) {
-      remoteContainer.innerHTML = '';
-    }
-
-    if (localContainer) {
-      localContainer.innerHTML = '';
-    }
+    this.listaVideosLocais.forEach(componente => componente.destroy());
   }
 
   ativarChatTexto() {
@@ -175,7 +176,7 @@ export class PaginaInicialComponent {
     this.salaAtiva.on('message', (e: any) => {
       console.log(e.sender);
 
-      this.chatTexto.adicionarMensagem(e.sender.userData.username, e.content);
+      this.chatTexto.adicionarMensagem(e.sender.userData.username, e.sender.userData.id, e.content);
     });
 
     // Escuta novas entradas e saidas de usuários na sala

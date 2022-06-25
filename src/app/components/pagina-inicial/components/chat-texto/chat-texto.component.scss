@@ -3,15 +3,17 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 10px 0 10px 10px;
   background-color: #fffee9;
 
   .area-mensagens {
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
+    padding-right: 10px;
+
   }
 
   .area-digitacao {
@@ -20,6 +22,21 @@
     justify-content: center;
     align-items: center;
   }
+}
+
+.area-mensagens::-webkit-scrollbar {
+  width: 8px;               /* width of the entire scrollbar */
+  background: #77776d;
+}
+
+.area-mensagens::-webkit-scrollbar-track {
+  background: #c3c2b1;        /* color of the tracking area */
+}
+
+.area-mensagens::-webkit-scrollbar-thumb {
+  background-color: #77776d;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 2px solid #77776d;  /* creates padding around scroll thumb */
 }
 
 ::ng-deep .entrou-saiu{
