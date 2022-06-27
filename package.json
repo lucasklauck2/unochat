@@ -4,7 +4,7 @@
     "name": "Lucas Klauck",
     "email": "lucasklauck2@gmail.com"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "src/app.js",
   "scripts": {
     "ng": "ng",
