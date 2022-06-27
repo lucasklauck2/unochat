@@ -9,10 +9,12 @@ import { VideoFullscreenComponent } from '../video-fullscreen/video-fullscreen.c
   providers: [DialogService]
 })
 export class VideoComponent implements OnInit {
-  @Input() width: number;
-  @Input() mediaStream: number;
+  @Input() heigth: number;
+  @Input() mediaStream: MediaStream;
   @Input() usuario: number;
   @Input() streamId: number;
+  @Input() tipoVideo: number;
+  @Input() mutado: boolean;
 
   constructor(private dialogService: DialogService) { }
 
@@ -20,9 +22,14 @@ export class VideoComponent implements OnInit {
   }
 
   onClick(){
+
     this.dialogService.open(VideoFullscreenComponent, {
-      header: `Câmera de ${this.usuario}`,
-      data: this.mediaStream,
+      header: `${this.tipoVideo === 2 ? 'Tela' : 'Câmera'} de ${this.usuario}`,
+      width: this.tipoVideo === 2 ? '60%' : 'auto',
+      data: {
+        mediaStream: this.mediaStream,
+        mutado: this.mutado
+      },
       closeOnEscape: true
   });
   }

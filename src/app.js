@@ -1,48 +1,51 @@
-const {
-  app,
-  BrowserWindow,
-  ipcMain
-} = require('electron')
+const { app, BrowserWindow, ipcMain } = require("electron");
+const electron = require("electron");
 const url = require("url");
 const path = require("path");
 
-let mainWindow
+let mainWindow;
 
 function createWindow() {
+  var screenElectron = electron.screen;
+  var mainScreen = screenElectron.getPrimaryDisplay();
+  var dimensoes = mainScreen.workArea;
+
   mainWindow = new BrowserWindow({
-    fullscreen: true,
-    frame: false,
+    width: dimensoes.width,
+    height: dimensoes.height,
+    frame: true,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
-    }
-  })
+    },
+  });
 
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, `../dist/index.html`),
       protocol: "file:",
-      slashes: true
+      slashes: true,
     })
   );
 
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
+  mainWindow.on("closed", function () {
+    mainWindow = null;
+  });
 }
 
-ipcMain.on('sair', (event) => {
-  console.log('Fechando aplicação');
-  app.quit()
-})
+ipcMain.on("sair", (event) => {
+  console.log("Fechando aplicação");
+  app.quit();
+});
 
-app.on('ready', createWindow)
+app.on("ready", createWindow);
 
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
-})
+app.on("window-all-closed", function () {
+  if (process.platform !== "darwin") app.quit();
+});
 
-app.on('activate', function () {
-  if (mainWindow === null) createWindow()
-})
+app.on("activate", function () {
+  if (mainWindow === null) createWindow();
+});

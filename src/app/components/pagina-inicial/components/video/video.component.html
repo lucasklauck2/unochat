@@ -1,6 +1,6 @@
-<div class="container" style="position: relative;background-color: rgba(0, 0, 0, 0.3);">
-  <video autoplay width="{{width}}" [srcObject]="mediaStream">
+<div class="container" style="position: relative;background-color: rgba(0, 0, 0, 0.3);margin: 5px;">
+  <video autoplay height="{{heigth}}" [srcObject]="mediaStream" controlsList="fullscreen" [muted]="mutado">
   </video>
-  <div class="identificacao-usuario"><span><span>{{usuario}}</span></span></div>
+  <div class="identificacao-usuario"><span><span>{{tipoVideo === 2 ? 'Tela de ' + usuario : usuario}}</span></span></div>
   <div class="maximizar"><img src="assets/maximizar.png" width="25" (click)="onClick()"></div>
 </div>

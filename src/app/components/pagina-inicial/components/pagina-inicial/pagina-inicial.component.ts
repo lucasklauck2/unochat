@@ -22,11 +22,13 @@ export class PaginaInicialComponent implements OnDestroy{
   conectado: boolean = false;
   entrando: boolean = false;
   mutado: boolean = false;
+  compartilhandoTela: boolean = false;
 
   nomeSala: string = '';
   canalConectado: string = '';
 
-  localStream: any = null;
+  videoStreamLocal: any = null;
+  screenStreamLocal: any = null;
   salaAtiva: any;
   userAgent: any;
 
@@ -52,7 +54,7 @@ export class PaginaInicialComponent implements OnDestroy{
   alterarEstadoAudio() {
     this.mutado = !this.mutado;
 
-    this.mutado ? this.localStream.muteAudio() : this.localStream.unmuteAudio();
+    this.mutado ? this.videoStreamLocal.muteAudio() : this.videoStreamLocal.unmuteAudio();
   }
 
   entrarSala() {
@@ -106,9 +108,13 @@ export class PaginaInicialComponent implements OnDestroy{
 
             // Adiciona a tag <video> com o streaming externo no container
             const componentRef = this.videosRemotos.createComponent(VideoComponent);
-            componentRef.instance.width = 400;
+            componentRef.instance.heigth = 250;
             componentRef.instance.mediaStream = stream.data;
             componentRef.instance.usuario = stream.contact.userData.username;
+
+            if(!stream.callAudioActive){
+              componentRef.instance.tipoVideo = 2;
+            }
 
             this.mapaComponenteVideoRemoto.set(stream.streamId.toString(), componentRef);
           })
@@ -127,14 +133,15 @@ export class PaginaInicialComponent implements OnDestroy{
         })
           .then((stream: any) => {
             // Salva o streaming de dados local
-            this.localStream = stream;
+            this.videoStreamLocal = stream;
 
             console.log('STREAM: ', stream);
 
             const componentRef = this.videosLocais.createComponent(VideoComponent);
-            componentRef.instance.width = 300;
+            componentRef.instance.heigth = 200;
             componentRef.instance.mediaStream = stream.data;
             componentRef.instance.usuario = 'Você'
+            componentRef.instance.mutado = true;
 
             this.listaVideosLocais.push(componentRef);
 
@@ -148,7 +155,7 @@ export class PaginaInicialComponent implements OnDestroy{
 
                 this.ativarChatTexto();
 
-                novaSala.publish(this.localStream);
+                novaSala.publish(this.videoStreamLocal);
               })
               .catch((erro: any) => {
                 console.error('Erro ao entrar na conversa', erro);
@@ -212,7 +219,9 @@ export class PaginaInicialComponent implements OnDestroy{
 
       this.resetarContainers();
 
-      this.localStream.release();
+      this.videoStreamLocal.release();
+
+      this.screenStreamLocal.release();
 
       this.salaAtiva.destroy();
 
@@ -225,5 +234,54 @@ export class PaginaInicialComponent implements OnDestroy{
 
       this.entrando = false;
     });
+  }
+
+  iniciarScreenSharing(){
+
+    if(!!this.screenStreamLocal){
+
+      this.screenStreamLocal.release();
+
+      return;
+    }
+
+    const displayMediaStreamConstraints = {
+      video: {
+          cursor: "always"
+      },
+      audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100
+      }
+  };
+
+  this.apiRTC.Stream.createDisplayMediaStream(displayMediaStreamConstraints, false)
+      .then((stream: any )=> {
+
+          stream.on('stopped', ()=> {
+            this.listaVideosLocais.forEach(componente => {
+              console.log(componente);
+              if(componente.instance.tipoVideo === 2){
+                console.log('DESTRUINDOI');
+
+                componente.destroy();
+              }
+            });
+
+            this.screenStreamLocal = null;
+
+            this.compartilhandoTela = false;
+          });
+
+          this.compartilhandoTela = true;
+
+          this.screenStreamLocal = stream;
+
+          this.salaAtiva.publish(this.screenStreamLocal);
+      })
+      .catch((erro: any) => {
+          console.error('Could not create screensharing stream :', erro);
+      });
   }
 }

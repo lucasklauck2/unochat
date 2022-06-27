@@ -16,10 +16,20 @@ export class VideoFullscreenComponent implements OnInit {
     const video = document.querySelector('#meuVideo') as HTMLVideoElement;
 
     if(video != null){
-      video.srcObject = this.config.data;
+      video.srcObject = this.config.data.mediaStream;
       video.play();
+
+      video.muted = !!this.config.data.mediaStream;
+
+      video.onpause = () => video.play();
     }
 
+  }
+
+  ativarFullScreen(){
+    const video = document.querySelector('#meuVideo') as HTMLVideoElement;
+
+    video.requestFullscreen();
   }
 
 }

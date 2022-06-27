@@ -1,4 +1,7 @@
 <div class="container">
+
+  <div id="compartilhamento-tela" *ngIf="compartilhandoTela"><span>Você está compartilhando sua tela</span></div>
+
   <div class="corpo">
     <div class="container-videos">
       <img *ngIf="!conectado" src="assets/logo.png" width="400" />
@@ -15,8 +18,8 @@
         <template #videosRemotos></template>
       </div>
       <div
-        [style.display]="!conectado ? 'none' : 'block'"
-        class="grid"
+        [style.display]="!conectado ? 'none' : 'flex'"
+        class="grid" id="local-container"
       >
         <template #videosLocais></template>
       </div>
@@ -91,6 +94,23 @@
         src="assets/micoff.png"
       />
     </button>
+
+    <button
+    *ngIf="conectado"
+    id="botao-compartilhamento-tela"
+    pButton
+    (click)="iniciarScreenSharing()"
+    style="margin-left: 20px; z-index: 1101"
+    class="p-button-info"
+
+    [ngClass]="{'p-button-info': !compartilhandoTela, 'p-button-danger': compartilhandoTela}"
+  >
+    <img *ngIf="!compartilhandoTela" height="20" src="assets/share.png" /><img
+      *ngIf="compartilhandoTela"
+      height="20"
+      src="assets/stop.png"
+    />
+  </button>
 
     <button
       pButton
