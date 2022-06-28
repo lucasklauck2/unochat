@@ -1,5 +1,13 @@
-import { Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  ComponentRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Stream } from 'stream';
 import { ChatTextoComponent } from '../chat-texto/chat-texto.component';
 import { VideoComponent } from '../video/video.component';
 import { IpcMainService } from './../../../../service/ipc-main.service';
@@ -9,10 +17,12 @@ import { IpcMainService } from './../../../../service/ipc-main.service';
   templateUrl: './pagina-inicial.component.html',
   styleUrls: ['./pagina-inicial.component.scss'],
 })
-export class PaginaInicialComponent implements OnDestroy{
+export class PaginaInicialComponent implements OnDestroy, OnInit {
   @ViewChild('chatTexto') chatTexto: ChatTextoComponent;
-  @ViewChild('videosLocais', { read: ViewContainerRef , static: true}) videosLocais: any;
-  @ViewChild('videosRemotos', { read: ViewContainerRef , static: true}) videosRemotos: any;
+  @ViewChild('videosLocais', { read: ViewContainerRef, static: true })
+  videosLocais: any;
+  @ViewChild('videosRemotos', { read: ViewContainerRef, static: true })
+  videosRemotos: any;
 
   apiRTC = require('@apizee/apirtc');
 
@@ -46,6 +56,26 @@ export class PaginaInicialComponent implements OnDestroy{
     return this.form.get('codigoSala') as FormControl;
   }
 
+  ngOnInit(): void {
+    // this.ipcMainService.on('enviartela', (event:any, msg: any)=>{
+    //   console.log('RECEBENDO COMPARTILHAMENTO: ', event);
+    //   console.log('MSG: ', msg);
+    //   const stream = await navigator.mediaDevices.getUserMedia({
+    //     audio: false,
+    //     video: {
+    //       mandatory: {
+    //         chromeMediaSource: "desktop",
+    //         chromeMediaSourceId: sourceId,
+    //         minWidth: 1280,
+    //         maxWidth: 1280,
+    //         minHeight: 720,
+    //         maxHeight: 720,
+    //       },
+    //     },
+    //   });
+    // });
+  }
+
   ngOnDestroy(): void {
     this.mapaComponenteVideoRemoto.forEach((valor, chave) => valor.destroy());
   }
@@ -54,7 +84,9 @@ export class PaginaInicialComponent implements OnDestroy{
   alterarEstadoAudio() {
     this.mutado = !this.mutado;
 
-    this.mutado ? this.videoStreamLocal.muteAudio() : this.videoStreamLocal.unmuteAudio();
+    this.mutado
+      ? this.videoStreamLocal.muteAudio()
+      : this.videoStreamLocal.unmuteAudio();
   }
 
   entrarSala() {
@@ -72,7 +104,6 @@ export class PaginaInicialComponent implements OnDestroy{
     // Registra o usuário e gera uma sessão
     ua.register()
       .then((session: any) => {
-
         session.setUsername(this.form.get('usuario')?.value);
 
         // Cria conversa com o código da sala
@@ -80,15 +111,10 @@ export class PaginaInicialComponent implements OnDestroy{
 
         this.salaAtiva = novaSala;
 
-        console.log('nova sala: ',novaSala)
-
         // Quando um novo streaming de dados estiver disponível na conversa
         novaSala.on('streamListChanged', (streamInfo: any) => {
-
           if (streamInfo.listEventType === 'added') {
-
             if (streamInfo.isRemote === true) {
-
               // Da um subscribe no streaming externo
               novaSala
                 .subscribeToMedia(streamInfo.streamId)
@@ -105,22 +131,27 @@ export class PaginaInicialComponent implements OnDestroy{
         // Quando um streaming de dados é adicionado ou removido da conversa
         novaSala
           .on('streamAdded', (stream: any) => {
-
             // Adiciona a tag <video> com o streaming externo no container
-            const componentRef = this.videosRemotos.createComponent(VideoComponent);
+            const componentRef =
+              this.videosRemotos.createComponent(VideoComponent);
             componentRef.instance.heigth = 250;
             componentRef.instance.mediaStream = stream.data;
             componentRef.instance.usuario = stream.contact.userData.username;
 
-            if(!stream.callAudioActive){
+            if (!stream.callAudioActive) {
               componentRef.instance.tipoVideo = 2;
             }
 
-            this.mapaComponenteVideoRemoto.set(stream.streamId.toString(), componentRef);
+            this.mapaComponenteVideoRemoto.set(
+              stream.streamId.toString(),
+              componentRef
+            );
           })
           .on('streamRemoved', (stream: any) => {
             //Remove a tag <video> com streaming externo do container
-            this.mapaComponenteVideoRemoto.get(stream.streamId.toString())?.destroy();
+            this.mapaComponenteVideoRemoto
+              .get(stream.streamId.toString())
+              ?.destroy();
             this.mapaComponenteVideoRemoto.delete(stream.streamId.toString());
           });
 
@@ -135,12 +166,11 @@ export class PaginaInicialComponent implements OnDestroy{
             // Salva o streaming de dados local
             this.videoStreamLocal = stream;
 
-            console.log('STREAM: ', stream);
-
-            const componentRef = this.videosLocais.createComponent(VideoComponent);
+            const componentRef =
+              this.videosLocais.createComponent(VideoComponent);
             componentRef.instance.heigth = 200;
             componentRef.instance.mediaStream = stream.data;
-            componentRef.instance.usuario = 'Você'
+            componentRef.instance.usuario = 'Você';
             componentRef.instance.mutado = true;
 
             this.listaVideosLocais.push(componentRef);
@@ -164,7 +194,7 @@ export class PaginaInicialComponent implements OnDestroy{
               });
           })
           .catch((err: any) => {
-            console.error('create stream error', err);
+            console.error('Erro ao criar stream', err);
             this.entrando = false;
           });
       })
@@ -174,16 +204,19 @@ export class PaginaInicialComponent implements OnDestroy{
   resetarContainers() {
     this.mapaComponenteVideoRemoto.forEach((valor, chave) => valor.destroy());
 
-    this.listaVideosLocais.forEach(componente => componente.destroy());
+    this.listaVideosLocais.forEach((componente) => componente.destroy());
   }
 
   ativarChatTexto() {
-
     // Escuta as novas mensagens enviadas na sala
     this.salaAtiva.on('message', (e: any) => {
       console.log(e.sender);
 
-      this.chatTexto.adicionarMensagem(e.sender.userData.username, e.sender.userData.id, e.content);
+      this.chatTexto.adicionarMensagem(
+        e.sender.userData.username,
+        e.sender.userData.id,
+        e.content
+      );
     });
 
     // Escuta novas entradas e saidas de usuários na sala
@@ -201,87 +234,69 @@ export class PaginaInicialComponent implements OnDestroy{
   }
 
   fecharAplicacao() {
-    this.ipcMainService.send('sair');
+    (window as any).fecharAplicacao().then((arg: any) => {});
   }
 
   enviarMensagem(mensagem: string) {
     this.salaAtiva.sendMessage(mensagem);
   }
 
-  sairSala(){
-
+  sairSala() {
     this.salaAtiva
-    .leave()
-    .then(() => {
-      console.debug('Sucesso ao sair da sala');
+      .leave()
+      .then(() => {
+        console.debug('Sucesso ao sair da sala');
 
-      this.conectado = false;
+        this.conectado = false;
 
-      this.resetarContainers();
+        this.resetarContainers();
 
-      this.videoStreamLocal.release();
+        this.videoStreamLocal.release();
 
-      this.screenStreamLocal.release();
+        this.screenStreamLocal.release();
 
-      this.salaAtiva.destroy();
+        this.salaAtiva.destroy();
 
-      this.userAgent.unregister();
+        this.userAgent.unregister();
 
-      this.salaAtiva = null;
-    })
-    .catch((erro: any) => {
-      console.error('Erro ao sair da sala', erro);
+        this.salaAtiva = null;
+      })
+      .catch((erro: any) => {
+        console.error('Erro ao sair da sala', erro);
 
-      this.entrando = false;
-    });
+        this.entrando = false;
+      });
   }
 
-  iniciarScreenSharing(){
-
-    if(!!this.screenStreamLocal){
-
+  iniciarScreenSharing() {
+    if (!!this.screenStreamLocal) {
       this.screenStreamLocal.release();
+
+      this.screenStreamLocal = null;
+
+      this.compartilhandoTela = false;
 
       return;
     }
 
-    const displayMediaStreamConstraints = {
-      video: {
-          cursor: "always"
-      },
-      audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          sampleRate: 44100
-      }
-  };
+    // Busca o sourceId do stream da tela no processo main, captura o stream no preload com o sourceId e transfere para o front via objeto MediaStream
+    (window as any)
+      .iniciarCompartilhamentoTela()
+      .then((videoDOM: HTMLVideoElement) => {
 
-  this.apiRTC.Stream.createDisplayMediaStream(displayMediaStreamConstraints, false)
-      .then((stream: any )=> {
+        this.userAgent
+          .createStreamFromMediaStream(videoDOM.srcObject)
+          .then((stream: any) => {
 
-          stream.on('stopped', ()=> {
-            this.listaVideosLocais.forEach(componente => {
-              console.log(componente);
-              if(componente.instance.tipoVideo === 2){
-                console.log('DESTRUINDOI');
+            this.compartilhandoTela = true;
 
-                componente.destroy();
-              }
-            });
+            this.screenStreamLocal = stream;
 
-            this.screenStreamLocal = null;
-
-            this.compartilhandoTela = false;
+            this.salaAtiva.publish(this.screenStreamLocal);
+          })
+          .catch((erro: any) => {
+            console.error('Erro ao iniciar stream da tela :', erro);
           });
-
-          this.compartilhandoTela = true;
-
-          this.screenStreamLocal = stream;
-
-          this.salaAtiva.publish(this.screenStreamLocal);
-      })
-      .catch((erro: any) => {
-          console.error('Could not create screensharing stream :', erro);
       });
   }
 }

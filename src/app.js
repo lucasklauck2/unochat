@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, desktopCapturer } = require("electron");
 const electron = require("electron");
 const url = require("url");
 const path = require("path");
@@ -13,12 +13,13 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: dimensoes.width,
     height: dimensoes.height,
-    frame: true,
+    frame: false,
     resizable: false,
     webPreferences: {
+      preload: path.join(__dirname, "/preload.js"),
       nodeIntegration: true,
       enableRemoteModule: true,
-      contextIsolation: false,
+      contextIsolation: true,
     },
   });
 
@@ -35,11 +36,6 @@ function createWindow() {
   });
 }
 
-ipcMain.on("sair", (event) => {
-  console.log("Fechando aplicação");
-  app.quit();
-});
-
 app.on("ready", createWindow);
 
 app.on("window-all-closed", function () {
@@ -48,4 +44,22 @@ app.on("window-all-closed", function () {
 
 app.on("activate", function () {
   if (mainWindow === null) createWindow();
+});
+
+ipcMain.handle("compartilhar_tela", async (event, arg) => {
+  console.log("RECEBIDO COMPARTILHAMENTO");
+
+  return new Promise((resolve) => {
+    desktopCapturer
+      .getSources({ types: ["window", "screen"] })
+      .then(async (sources) => {
+        resolve(sources[0].id);
+      });
+  });
+});
+
+ipcMain.handle("fechar_aplicacao", async (event, arg) => {
+  app.quit();
+
+  return true;
 });
