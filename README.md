@@ -5,7 +5,7 @@ Projeto realizado para o curso de Ciência Da Computação - UNOESC - Progamçã
 Public
 # UnoCHAT
 
-Aplicativo desktop para comunicação via chat de vídeo
+Aplicativo desktop para comunicação via chat de vídeo e texto, estilo Google Meet
 
 ## Tecnologias
 Frontend: Angular + PrimeNG + Electron
