@@ -15,6 +15,7 @@ function createWindow() {
     height: dimensoes.height,
     frame: false,
     resizable: false,
+    icon: __dirname + '/favicon.ico',
     webPreferences: {
       preload: path.join(__dirname, "/preload.js"),
       nodeIntegration: true,
