@@ -16,10 +16,8 @@ Backend: NodeJS
 
 ❯ npm install
 
-> npm start ou npx electron-forge package
-
+> npm start ou npx run publish (geração de executável)
 
 ## Devs
 @lucasklauck2
-
-@eduardo.tokenlski
+@eduardo.tonkelski
