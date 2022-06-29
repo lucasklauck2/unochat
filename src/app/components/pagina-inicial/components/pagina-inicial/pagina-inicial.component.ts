@@ -234,9 +234,13 @@ export class PaginaInicialComponent implements OnDestroy, OnInit {
 
         this.resetarContainers();
 
-        this.videoStreamLocal.release();
+        if(!!this.videoStreamLocal){
+          this.videoStreamLocal.release();
+        }
 
-        this.screenStreamLocal.release();
+        if(!!this.screenStreamLocal){
+          this.screenStreamLocal.release();
+        }
 
         this.salaAtiva.destroy();
 
