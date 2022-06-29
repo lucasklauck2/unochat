@@ -57,23 +57,6 @@ export class PaginaInicialComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    // this.ipcMainService.on('enviartela', (event:any, msg: any)=>{
-    //   console.log('RECEBENDO COMPARTILHAMENTO: ', event);
-    //   console.log('MSG: ', msg);
-    //   const stream = await navigator.mediaDevices.getUserMedia({
-    //     audio: false,
-    //     video: {
-    //       mandatory: {
-    //         chromeMediaSource: "desktop",
-    //         chromeMediaSourceId: sourceId,
-    //         minWidth: 1280,
-    //         maxWidth: 1280,
-    //         minHeight: 720,
-    //         maxHeight: 720,
-    //       },
-    //     },
-    //   });
-    // });
   }
 
   ngOnDestroy(): void {
