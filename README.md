@@ -16,7 +16,7 @@ Backend: NodeJS
 
 ❯ npm install
 
-> npm start ou npx run publish (geração de executável)
+> npm start ou npm run publish (geração de executável)
 
 ## Devs
 @lucasklauck2
